@@ -1,10 +1,10 @@
 from translatepy import Translator, Language
-from translatepy.translators.microsoft import MicrosoftTranslate
+from translatepy.translators.bing import BingTranslate
 import datetime
 import pytz
 import json
 
-gtranslate = MicrosoftTranslate()
+gtranslate = BingTranslate()
 
 
 def inline_translater(message: str, lang='eng'):

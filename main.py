@@ -34,7 +34,7 @@ async def starter_sheduling():
                             await bot.send_message(res['user'], msg_parse, parse_mode='HTML')
                         else:
                             user_language = (await get_user(res['user'], bot.get('db'))).bot_language
-                            await bot.send_message(inline_translater("Ваш словарь пуст, добавте в него пару новых слов!📝", output_lang))
+                            await bot.send_message(inline_translater("Ваш словарь пуст, добавте в него пару новых слов!📝", user_language))
         except exc.SQLAlchemyError as ex:
             logging.exception(ex)
 
@@ -62,7 +62,7 @@ async def main():
         await dp.start_polling(dp, allowed_updates=get_handled_updates_list(dp))
         
     finally:
-
+        print("Bot is now stoped!")
         await dp.storage.close()
         await dp.storage.wait_closed()
         await bot.session.close()
