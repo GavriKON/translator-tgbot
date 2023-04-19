@@ -73,7 +73,10 @@ async def set_language(callback: types.CallbackQuery, state: FSMContext):
                 await state.finish()
             # !!! QUESTION
         except:
-            await callback.reply("Canceled", reply_markup=user_keyboard_onstart)
+            # callback: types.Message
+            await callback.delete()
+            user_language = (await get_user(callback.from_user.id, bot.get('db'))).bot_language
+            await callback.answer(inline_translater("❗️SOMETHING WENT WRONG, TRY AGAIN!❗️", user_language), reply_markup=user_keyboard_onstart)
             await state.finish()
 
 

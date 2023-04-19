@@ -22,6 +22,7 @@ services:
   bot:
     build: .
     command: sh -c "make migrate && python -m main"
+    restart: always
     env_file:
       - ./.env
     depends_on:
