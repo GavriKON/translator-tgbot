@@ -72,7 +72,8 @@ async def set_language(callback: types.CallbackQuery, state: FSMContext):
                 await callback.message.answer(text=f'<b>Current language:</b> <i>{callback.data.upper() + emoji_dict.get(callback.data)}</i> ',reply_markup=user_keyboard_onstart,parse_mode='HTML')
                 await state.finish()
             # !!! QUESTION
-        except:
+        except Exception as ex:
+            print(ex)
             # callback: types.Message
             await callback.delete()
             user_language = (await get_user(callback.from_user.id, bot.get('db'))).bot_language
@@ -89,6 +90,7 @@ async def cancel_cmd(message: types.Message, state: FSMContext):
         
 
 def register_handlers_fsm(dp: Dispatcher):
+    # ! Заменить для callback
     dp.register_message_handler(change_language, commands=['change_language'], state=None)
     dp.register_message_handler(change_language, Text(equals='Change language', ignore_case=True),state=None)
     dp.register_message_handler(load_options, Text(equals=["Bot Language", "Translation Language"], ignore_case=True), state=FSMAdmin.lang_options)

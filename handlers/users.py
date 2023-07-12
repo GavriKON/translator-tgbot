@@ -3,8 +3,8 @@ import logging
 from aiogram import types, Dispatcher
 from aiogram.dispatcher.filters import Text
 from create_bot import dp, bot
-from buttons import user_keyboard_onstart, user_keyboard_change_lang, add_to_dictionary_inline_key, delete_from_dictionary_inline_key, confirmation_button
-from handlers.general import inline_translater,take_user_timezone
+from buttons import user_keyboard_onstart, user_keyboard_change_lang, add_to_dictionary_inline_keyboard, delete_from_dictionary_inline_key, confirmation_button
+from handlers.general import inline_translater,take_user_timezone, text_to_speech
 from db.commands import add_user, get_user,commit_dictionary, get_user_dictionary, delete_from_dictionary, clear_all_dictionary, take_all_users
 from aiogram.dispatcher.middlewares import BaseMiddleware
 from aiogram.dispatcher.handler import CancelHandler, current_handler
@@ -91,7 +91,7 @@ async def echo_send_translation(message: types.Message):
 
     json_application = {"message": str(message.text).capitalize(), "translation": str(result), 'notification_time': None}
 
-    await message.reply(result, reply_markup=add_to_dictionary_inline_key)
+    await message.reply(result, reply_markup=add_to_dictionary_inline_keyboard(json_application['translation']))
 
 
 @dp.callback_query_handler(Text(equals='add'))
@@ -107,6 +107,17 @@ async def add_word_to_dictionary(callback: types.CallbackQuery):
 
     await callback.answer(inline_translater("The dictionary has been updated", output_lang))
 
+
+@dp.callback_query_handler(Text(endswith='speech'))
+async def send_audio(callback: types.CallbackQuery):
+
+    translated = callback.data.split('_')[0]
+
+    audio = text_to_speech(translated)
+
+    audio_title = f"{translated[:15]}" if len(translated) <= 15 else f"{translated[:15]}..."
+
+    await callback.bot.send_audio(callback.from_user.id, audio=audio, title=audio_title)
 
 def register_handlers_client(dp: Dispatcher):
     dp.register_message_handler(

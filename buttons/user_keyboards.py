@@ -38,8 +38,10 @@ change_trans_lang_buttons = InlineKeyboardMarkup(row_width=2).add(InlineKeyboard
 
 ###? Add to dictionary inline button ?###
 # dict_implementation = CallbackData('add','action', 'message')
-add_to_dictionary_inline_key = InlineKeyboardMarkup(row_width=1).add(InlineKeyboardButton(text="Add to dictionary ➕", callback_data="add"))
-
+def add_to_dictionary_inline_keyboard(translated_word: str):
+    add_to_dictionary_inline_key = InlineKeyboardMarkup(row_width=1).add(InlineKeyboardButton(text="Add to dictionary ➕", callback_data="add")).add(InlineKeyboardButton(text="Audio 🔉", callback_data=f"{translated_word}_speech"))
+    return add_to_dictionary_inline_key
+    
 ###? Delete from dictionary inline button ?###
 def delete_from_dictionary_inline_key(word_id:int):
     delete_from_dictionary_inline_keyboard = InlineKeyboardMarkup(row_width=1).add(InlineKeyboardButton(text="Delete from dictionary ❌", callback_data=f"{word_id}_delete"))
